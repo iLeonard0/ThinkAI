@@ -1,1 +1,1 @@
-# projeto-integrador
+# Think AI - Think with the AI
