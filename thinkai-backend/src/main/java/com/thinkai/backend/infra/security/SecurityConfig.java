@@ -1,5 +1,6 @@
 package com.thinkai.backend.infra.security;
 
+import com.thinkai.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +19,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final CustomUserDetailsService customUserDetailsService;
+    private final SecurityFilter securityFilter;
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
-
-    @Autowired
-    SecurityFilter securityFilter;
+    public SecurityConfig (CustomUserDetailsService customUserDetailsService, SecurityFilter securityFilter) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.securityFilter = securityFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
