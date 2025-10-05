@@ -7,6 +7,7 @@ import com.thinkai.backend.dto.ResponseDTO;
 import com.thinkai.backend.infra.security.TokenService;
 import com.thinkai.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class AuthController {
     private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDTO body) {
+    public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO body) {
         User user = this.userRepository.findUserByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found."));
 
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
@@ -37,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
+    public ResponseEntity<ResponseDTO> register(@RequestBody RegisterRequestDTO body) {
         Optional<User> user = this.userRepository.findUserByEmail(body.email());
 
         if (user.isEmpty()) {
