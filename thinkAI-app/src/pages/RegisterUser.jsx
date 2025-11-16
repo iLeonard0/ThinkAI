@@ -1,31 +1,55 @@
 import React, { useContext, useState } from "react"
 import { Box, Button, Container, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material"
-import { useNavigate } from "react-router"
-import EmailIcon from '@mui/icons-material/Email'
 import LockIcon from '@mui/icons-material/Lock'
+import EmailIcon from '@mui/icons-material/Email'
+import PersonIcon from '@mui/icons-material/Person'
 import { useSnackbar } from "notistack"
+import { useNavigate } from "react-router"
 import { AuthContext } from "../context/AuthProvider"
 
-export default function Login() {
+export default function RegisterUser() {
+    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const { login } = useContext(AuthContext)
+    const { register } = useContext(AuthContext)
     const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
 
-    const handleLogin = async (e) => {
-        e.preventDefault()
+    const handleValidateRegister = () => {
+        if (name.trim() === "") {
+            enqueueSnackbar("O nome do usuário não pode estar vazio.", { variant: 'error' })
+            return false
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(email)) {
+            enqueueSnackbar("Digite um e-mail válido.", { variant: 'error' })
+            return false
+        }
+
+        if (password.length < 8) {
+            enqueueSnackbar("A senha deve ter pelo meno  8 caracteres.", { variant: 'error' })
+            return false
+        }
+
+        return true
+    }
+
+    async function handleRegister() {
         try {
-            await login(email, password)
-            navigate('/dashboard')
-        } catch (err) {
-            enqueueSnackbar('Erro ao fazer login. Verifique suas credenciais.', { variant: 'error' })
-            console.error("Erro ao fazer login:", err)
+            const isValid = handleValidateRegister()
+            if (!isValid) return
+
+            await register(name, email, password)
+            enqueueSnackbar("Usuário registrado com sucesso!", { variant: 'success' })
+            navigate("/login")
+        } catch {
+            enqueueSnackbar("Falha ao registrar o usuário", { variant: 'error' })
         }
     }
 
-    const handleRegister = () => {
-        navigate('/register')
+    function handleBackToLoginPage() {
+        navigate("/login")
     }
 
     return (
@@ -86,37 +110,49 @@ export default function Login() {
                             </Box>
                         </Box>
                     </Box>
-
                     <Typography
                         variant="h4"
                         align="center"
                         sx={{ color: "#fff", fontWeight: 700, mb: 1 }}
                     >
-                        Think AI
+                        Registre-se
                     </Typography>
-                    <Typography
-                        variant="body1"
-                        align="center"
-                        sx={{ color: "rgba(255, 255, 255, 0.6)", mb: 4 }}
-                    >
-                        Não tem uma conta ainda?{" "}
-                        <Typography
-                            component="a"
-                            href="#"
-                            onClick={handleRegister}
-                            sx={{
-                                color: "#fff",
-                                fontWeight: 500,
-                                textDecoration: "none",
-                                "&:hover": { color: "#a855f7" },
-                            }}
-                        >
-                            Cadastre-se
-                        </Typography>
-                    </Typography>
-
-                    <form onSubmit={handleLogin}>
+                    <Box sx={{ mt: 2 }}>
                         <Stack spacing={2}>
+                            <TextField
+                                fullWidth
+                                type="text"
+                                placeholder="usuário"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <PersonIcon sx={{ color: "rgba(255, 255, 255, 0.5)" }} />
+                                        </InputAdornment>
+                                    ),
+                                    sx: {
+                                        background: "rgba(255, 255, 255, 0.05)",
+                                        borderRadius: 2,
+                                        color: "#fff",
+                                        "& .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "rgba(255, 255, 255, 0.1)",
+                                        },
+                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "rgba(255, 255, 255, 0.2)",
+                                        },
+                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#a855f7",
+                                        },
+                                    },
+                                }}
+                                sx={{
+                                    "& .MuiInputBase-input::placeholder": {
+                                        color: "rgba(255, 255, 255, 0.5)",
+                                        opacity: 1,
+                                    },
+                                }}
+                            />
                             <TextField
                                 fullWidth
                                 type="email"
@@ -151,7 +187,6 @@ export default function Login() {
                                     },
                                 }}
                             />
-
                             <TextField
                                 fullWidth
                                 type="password"
@@ -186,30 +221,48 @@ export default function Login() {
                                     },
                                 }}
                             />
-
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{
-                                    height: 48,
-                                    background: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)",
-                                    color: "#fff",
-                                    fontWeight: 600,
-                                    textTransform: "none",
-                                    fontSize: 16,
-                                    borderRadius: 2,
-                                    boxShadow: "0 8px 32px rgba(168, 85, 247, 0.3)",
-                                    "&:hover": {
-                                        background: "linear-gradient(135deg, #9333ea 0%, #6d28d9 100%)",
-                                        boxShadow: "0 8px 32px rgba(168, 85, 247, 0.5)",
-                                    },
-                                }}
-                            >
-                                Login
-                            </Button>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
+                                <Button
+                                    onClick={handleBackToLoginPage}
+                                    type="submit"
+                                    fullWidth
+                                    variant="outlined"
+                                    sx={{
+                                        // background: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)",
+                                        color: "#fff",
+                                        fontWeight: 600,
+                                        textTransform: "none",
+                                        fontSize: 16,
+                                        borderRadius: 2,
+                                        borderColor: '#a855f7'
+                                    }}
+                                >
+                                    Voltar
+                                </Button>
+                                <Button
+                                    onClick={handleRegister}
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{
+                                        background: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)",
+                                        color: "#fff",
+                                        fontWeight: 600,
+                                        textTransform: "none",
+                                        fontSize: 16,
+                                        borderRadius: 2,
+                                        boxShadow: "0 8px 32px rgba(168, 85, 247, 0.3)",
+                                        "&:hover": {
+                                            background: "linear-gradient(135deg, #9333ea 0%, #6d28d9 100%)",
+                                            boxShadow: "0 8px 32px rgba(168, 85, 247, 0.5)",
+                                        },
+                                    }}
+                                >
+                                    Registrar
+                                </Button>
+                            </Box>
                         </Stack>
-                    </form>
+                    </Box>
                 </Paper>
             </Container>
         </Box>

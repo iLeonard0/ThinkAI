@@ -7,9 +7,9 @@ import { createRef } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 
 function App() {
-  const notistackRef = createRef();
+  const notistackRef = createRef()
   const onClickDismiss = key => () => {
-    notistackRef.current.closeSnackbar(key);
+    notistackRef.current.closeSnackbar(key)
   }
 
   return (

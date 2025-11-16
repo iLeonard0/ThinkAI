@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, createContext } from "react"
 import { api } from "../services/api"
-import { AuthContext } from "./AuthContext"
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadStoragedData() {
@@ -12,10 +14,15 @@ export const AuthProvider = ({ children }) => {
       const storagedUser = localStorage.getItem("@App:user")
 
       if (storagedToken && storagedUser) {
-        api.defaults.headers.Authorization = `Bearer ${storagedToken}`
-        setUser(JSON.parse(storagedUser))
+        try {
+          api.defaults.headers.Authorization = `Bearer ${storagedToken}`
+          setUser(JSON.parse(storagedUser))
+        } catch (e) {
+          console.error("Erro ao parsear dados do localStorage", e)
+          localStorage.removeItem("@App:token")
+          localStorage.removeItem("@App:user")
+        }
       }
-
       setLoading(false)
     }
 
@@ -24,16 +31,41 @@ export const AuthProvider = ({ children }) => {
 
   async function login(email, password) {
     try {
-      const response = await api.post("/login", { email, password })
-      const { token, user } = response.data
+      const response = await api.post("/auth/login", { email, password })
+      
+      const { name, token } = response.data
+
+      const userObject = { name, email } 
 
       localStorage.setItem("@App:token", token)
-      localStorage.setItem("@App:user", JSON.stringify(user))
+      localStorage.setItem("@App:user", JSON.stringify(userObject))
       api.defaults.headers.Authorization = `Bearer ${token}`
-      setUser(user)
+      setUser(userObject)
+
     } catch (error) {
       console.error("Falha no login", error)
       throw error
+    }
+  }
+
+  async function register(name, email, password) { 
+    try {
+      const response = await api.post("/auth/register", { name, email, password })
+      
+      const { name: responseName, token } = response.data
+
+      const userObject = { name: responseName, email }
+
+      api.defaults.headers.Authorization = `Bearer ${token}`
+      setUser(userObject)
+
+      localStorage.setItem("@App:token", token)
+      localStorage.setItem("@App:user", JSON.stringify(userObject))
+
+      return response.data
+    } catch (err) {
+      console.error("Erro ao registrar:", err)
+      throw err
     }
   }
 
@@ -46,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user, login, logout, loading }}
+      value={{ signed: !!user, user, login, logout, register, loading }}
     >
       {children}
     </AuthContext.Provider>
