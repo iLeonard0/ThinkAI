@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Box, Button, Container, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, Container, Icon, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material"
 import { useNavigate } from "react-router"
 import EmailIcon from '@mui/icons-material/Email'
 import LockIcon from '@mui/icons-material/Lock'
@@ -56,39 +56,7 @@ export default function Login() {
                     }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-                        <Box
-                            sx={{
-                                width: 64,
-                                height: 64,
-                                borderRadius: "50%",
-                                background: (theme) => theme.palette.custom.gradientButton,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                boxShadow: "0 8px 32px rgba(168, 85, 247, 0.3)",
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    width: 48,
-                                    height: 48,
-                                    borderRadius: "50%",
-                                    border: (theme) => `4px solid ${theme.palette.background.default}`,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        borderRadius: "50%",
-                                        background: (theme) => theme.palette.background.default,
-                                    }}
-                                />
-                            </Box>
-                        </Box>
+                       <Icon />
                     </Box>
 
                     <Typography
