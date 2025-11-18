@@ -1,50 +1,15 @@
 import React, { useState } from 'react'
-import { Box, Toolbar, Divider, IconButton, Drawer, } from '@mui/material'
+import { Box, Toolbar, Divider, IconButton, Drawer, Typography, } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { Outlet } from 'react-router'
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import { PRIMARY_MAIN } from '../../theme/palette'
+import AccordionChats from './AccordionChats'
+import MenuOptions from './MenuOptions'
 
-const drawerWidth = 240
-const closedDrawerWidth = 65
-
-function ThinkAiIcon() {
-    return (
-        <Box
-            sx={{
-                width: 32,
-                height: 32,
-                borderRadius: "50%",
-                background: (theme) => theme.palette.custom.gradientButton,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 8px 32px rgba(168, 85, 247, 0.3)",
-            }}
-        >
-            <Box
-                sx={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: "50%",
-                    border: (theme) => `4px solid ${theme.palette.background.default}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                <Box
-                    sx={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: "50%",
-                        background: (theme) => theme.palette.background.default,
-                    }}
-                />
-            </Box>
-        </Box>
-    )
-}
+const drawerWidth = 285
+const closedDrawerWidth = 60
 
 export default function MenuDrawer() {
     const theme = useTheme()
@@ -90,28 +55,37 @@ export default function MenuDrawer() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: open ? 'space-between' : 'center',
-                        ml: open ? 2 : 0,
-                        mr: open ? 1 : 0,
+                        ml: open ? 0.5 : 0.4,
+                        mr: open ? 1 : 0.9,
                         ...theme.mixins.toolbar,
                     }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                         {open ? (
-                            <ThinkAiIcon />
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+                                <img src="\public\thinkai-icon.png" height={'50px'} width={'50px'} />
+                                <Typography variant='h4' sx={{ fontWeight: 'bold', color: PRIMARY_MAIN }}>
+                                    Think AI
+                                </Typography>
+                            </Box>
                         ) : (
                             <IconButton onClick={handleDrawerOpen}>
-                                <MenuIcon />
+                                <MenuIcon sx={{ color: PRIMARY_MAIN }} />
                             </IconButton>
                         )}
 
                     </Box>
                     {open && (
                         <IconButton onClick={handleDrawerClose}>
-                            <ChevronLeftIcon />
+                            <ChevronLeftIcon sx={{ color: PRIMARY_MAIN }} />
                         </IconButton>
                     )}
                 </Box>
                 <Divider />
+                <MenuOptions />
+                <AccordionChats
+                    open={open}
+                />
             </Drawer>
             <Box
                 component="main"

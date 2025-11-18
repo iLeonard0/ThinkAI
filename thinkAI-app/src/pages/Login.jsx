@@ -55,8 +55,8 @@ export default function Login() {
                         borderRadius: 4,
                     }}
                 >
-                    <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-                       <Icon />
+                    <Box sx={{ display: "flex", justifyContent: "center"}}>
+                       <img src="\public\thinkai-icon.png" height={'100px'} width={'100px'}/>
                     </Box>
 
                     <Typography

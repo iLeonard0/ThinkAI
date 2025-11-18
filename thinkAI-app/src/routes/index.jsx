@@ -4,7 +4,7 @@ import Login from "../pages/Login"
 import { ProtectedRoute } from "../components/ProtectedRoute"
 import RegisterUser from "../pages/RegisterUser"
 import AiChat from "../pages/AiChat"
-import MenuDrawer from "../components/MenuDrawer"
+import MenuDrawer from "../components/menuDrawer"
 
 export const AppRoutes = () => {
     return (
