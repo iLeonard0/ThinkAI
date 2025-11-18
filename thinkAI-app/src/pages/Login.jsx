@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Box, Button, Container, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, Container, Icon, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material"
 import { useNavigate } from "react-router"
 import EmailIcon from '@mui/icons-material/Email'
 import LockIcon from '@mui/icons-material/Lock'
@@ -11,20 +11,26 @@ export default function Login() {
     const [password, setPassword] = useState('')
     const { login } = useContext(AuthContext)
     const { enqueueSnackbar } = useSnackbar()
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
+            setLoading(true)
+
             await login(email, password)
-            navigate('/dashboard')
+            navigate('/chatAi')
         } catch (err) {
             enqueueSnackbar('Erro ao fazer login. Verifique suas credenciais.', { variant: 'error' })
             console.error("Erro ao fazer login:", err)
+        } finally {
+            setLoading(false)
         }
     }
 
-    const handleRegister = () => {
+    const handleRegister = (e) => {
+        e.preventDefault()
         navigate('/register')
     }
 
@@ -35,7 +41,6 @@ export default function Login() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)",
                 position: "relative",
                 overflow: "hidden",
             }}
@@ -45,59 +50,28 @@ export default function Login() {
                     elevation={24}
                     sx={{
                         p: 4,
-                        background: "rgba(17, 25, 40, 0.75)",
                         backdropFilter: "blur(16px)",
-                        border: "1px solid rgba(255, 255, 255, 0.125)",
+                        border: (theme) => `1px solid ${theme.palette.custom.glassBorder}`,
                         borderRadius: 4,
                     }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-                        <Box
-                            sx={{
-                                width: 64,
-                                height: 64,
-                                borderRadius: "50%",
-                                background: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                boxShadow: "0 8px 32px rgba(168, 85, 247, 0.3)",
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    width: 48,
-                                    height: 48,
-                                    borderRadius: "50%",
-                                    border: "4px solid rgba(17, 25, 40, 1)",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        borderRadius: "50%",
-                                        background: "rgba(17, 25, 40, 1)",
-                                    }}
-                                />
-                            </Box>
-                        </Box>
+                       <Icon />
                     </Box>
 
                     <Typography
-                        variant="h4"
+                        variant="h1"
                         align="center"
-                        sx={{ color: "#fff", fontWeight: 700, mb: 1 }}
+                        sx={{ fontWeight: 700, mb: 1 }}
                     >
                         Think AI
                     </Typography>
+
                     <Typography
-                        variant="body1"
+                        variant="h5"
                         align="center"
-                        sx={{ color: "rgba(255, 255, 255, 0.6)", mb: 4 }}
+                        color="text.secondary"
+                        sx={{ mb: 4 }}
                     >
                         Não tem uma conta ainda?{" "}
                         <Typography
@@ -105,10 +79,12 @@ export default function Login() {
                             href="#"
                             onClick={handleRegister}
                             sx={{
-                                color: "#fff",
+                                color: "text.primary",
                                 fontWeight: 500,
                                 textDecoration: "none",
-                                "&:hover": { color: "#a855f7" },
+                                "&:hover": {
+                                    color: "primary.main"
+                                },
                             }}
                         >
                             Cadastre-se
@@ -123,32 +99,14 @@ export default function Login() {
                                 placeholder="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <EmailIcon sx={{ color: "rgba(255, 255, 255, 0.5)" }} />
-                                        </InputAdornment>
-                                    ),
-                                    sx: {
-                                        background: "rgba(255, 255, 255, 0.05)",
-                                        borderRadius: 2,
-                                        color: "#fff",
-                                        "& .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "rgba(255, 255, 255, 0.1)",
-                                        },
-                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "rgba(255, 255, 255, 0.2)",
-                                        },
-                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "#a855f7",
-                                        },
-                                    },
-                                }}
-                                sx={{
-                                    "& .MuiInputBase-input::placeholder": {
-                                        color: "rgba(255, 255, 255, 0.5)",
-                                        opacity: 1,
-                                    },
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <EmailIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }
                                 }}
                             />
 
@@ -158,55 +116,37 @@ export default function Login() {
                                 placeholder="senha"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <LockIcon sx={{ color: "rgba(255, 255, 255, 0.5)" }} />
-                                        </InputAdornment>
-                                    ),
-                                    sx: {
-                                        background: "rgba(255, 255, 255, 0.05)",
-                                        borderRadius: 2,
-                                        color: "#fff",
-                                        "& .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "rgba(255, 255, 255, 0.1)",
-                                        },
-                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "rgba(255, 255, 255, 0.2)",
-                                        },
-                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "#a855f7",
-                                        },
-                                    },
-                                }}
-                                sx={{
-                                    "& .MuiInputBase-input::placeholder": {
-                                        color: "rgba(255, 255, 255, 0.5)",
-                                        opacity: 1,
-                                    },
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <LockIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }
                                 }}
                             />
 
                             <Button
+                                loading={loading}
+                                loadingPosition="start"
                                 type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{
                                     height: 48,
-                                    background: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)",
-                                    color: "#fff",
+                                    background: (theme) => theme.palette.custom.gradientButton,
                                     fontWeight: 600,
-                                    textTransform: "none",
                                     fontSize: 16,
                                     borderRadius: 2,
                                     boxShadow: "0 8px 32px rgba(168, 85, 247, 0.3)",
                                     "&:hover": {
-                                        background: "linear-gradient(135deg, #9333ea 0%, #6d28d9 100%)",
+                                        background: (theme) => theme.palette.custom.gradientButtonHover,
                                         boxShadow: "0 8px 32px rgba(168, 85, 247, 0.5)",
                                     },
                                 }}
                             >
-                                Login
+                                {loading ? 'Aguarde' : 'Login'}
                             </Button>
                         </Stack>
                     </form>

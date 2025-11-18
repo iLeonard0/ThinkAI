@@ -8,7 +8,6 @@ import com.thinkai.backend.dto.ResponseDTO;
 import com.thinkai.backend.infra.security.TokenService;
 import com.thinkai.backend.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

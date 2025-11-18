@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserFactory {
-    // Padrão Factory Method
+    // Padrão Factory Method (Criacional) - Encapsula a lógica de criação de usuários
     private final PasswordEncoder passwordEncoder;
 
     public User createFromDTO(RegisterRequestDTO dto) {
 
         String encodedPassword = passwordEncoder.encode(dto.password());
 
-        // Padrão Builder
+        // Padrão Builder (Criacional)
         return User.builder()
                 .name(dto.name())
                 .email(dto.email())
