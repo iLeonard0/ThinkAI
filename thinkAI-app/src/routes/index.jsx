@@ -9,13 +9,17 @@ import MenuDrawer from "../components/menuDrawer"
 export const AppRoutes = () => {
     return (
         <Routes>
+            {/* Rotas Públicas */}
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<RegisterUser />} />
 
+            {/* Rotas Protegidas */}
             <Route element={<ProtectedRoute />}>
                 <Route element={<MenuDrawer />}> 
+                    <Route path="/chat/:id" element={<AiChat />} />
                     <Route path="/chatAi" element={<AiChat />} />
+
                 </Route>
             </Route>
         </Routes>

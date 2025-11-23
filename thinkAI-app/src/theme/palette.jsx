@@ -6,6 +6,11 @@ export const PRIMARY_DARK = "#7c3aed"
 export const PRIMARY_HOVER_START = "#9333ea"
 export const PRIMARY_HOVER_END = "#6d28d9"
 
+export const SECONDARY_MAIN = "#1a0b2e"
+export const SECONDARY_DARK = "#120825"
+export const SECONDARY_HOVER_START = "#210d3a"
+export const SECONDARY_HOVER_END = "#0c061b"
+
 export const BG_DARK_START = "#0a0a0a"
 export const BG_DARK_END = "#1a1a2e"
 
