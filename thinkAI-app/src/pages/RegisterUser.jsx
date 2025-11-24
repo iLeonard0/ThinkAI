@@ -40,16 +40,21 @@ export default function RegisterUser() {
         const isValid = handleValidateRegister()
         if (!isValid) return
 
-        try {
-            startTransition(async () => {
+        startTransition(async () => {
+            try {
                 await register(name, email, password)
+                
                 enqueueSnackbar("Usuário registrado com sucesso!", { variant: "success" })
-                navigate("/login")
-            })
-
-        } catch {
-            enqueueSnackbar("Falha ao registrar o usuário", { variant: 'error' })
-        }
+                navigate("/login") 
+                
+            } catch (err) {
+                if (err.response && err.response.status === 403) {
+                    enqueueSnackbar("Esse e-mail já está cadastrado.", { variant: 'error' })
+                } else {
+                    enqueueSnackbar("Falha ao registrar o usuário. Tente novamente.", { variant: 'error' })
+                }
+            }
+        })
     }
 
     function handleBackToLoginPage() {

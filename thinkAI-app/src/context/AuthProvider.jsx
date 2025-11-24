@@ -1,10 +1,12 @@
 import React, { useState, useEffect, createContext } from "react"
 import { api } from "../services/api"
+import { useSnackbar } from "notistack"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
+  const { enqueueSnackbar } = useSnackbar()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -32,10 +34,10 @@ export const AuthProvider = ({ children }) => {
   async function login(email, password) {
     try {
       const response = await api.post("/auth/login", { email, password })
-      
+
       const { name, token } = response.data
 
-      const userObject = { name, email } 
+      const userObject = { name, email }
 
       localStorage.setItem("@App:token", token)
       localStorage.setItem("@App:user", JSON.stringify(userObject))
@@ -48,10 +50,9 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  async function register(name, email, password) { 
+  async function register(name, email, password) {
     try {
       const response = await api.post("/auth/register", { name, email, password })
-      
       const { name: responseName, token } = response.data
 
       const userObject = { name: responseName, email }
