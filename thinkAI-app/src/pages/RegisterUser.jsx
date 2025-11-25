@@ -43,10 +43,10 @@ export default function RegisterUser() {
         startTransition(async () => {
             try {
                 await register(name, email, password)
-                
+
                 enqueueSnackbar("Usuário registrado com sucesso!", { variant: "success" })
-                navigate("/login") 
-                
+                navigate("/login")
+
             } catch (err) {
                 if (err.response && err.response.status === 403) {
                     enqueueSnackbar("Esse e-mail já está cadastrado.", { variant: 'error' })

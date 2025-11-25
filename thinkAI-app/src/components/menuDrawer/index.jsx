@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
-import { Box, Divider, IconButton, Drawer, Typography, AppBar, Toolbar, Avatar, InputBase } from '@mui/material'
+import React, { useContext, useState } from 'react'
+import { Box, Divider, IconButton, Drawer, Typography, AppBar, Toolbar, Avatar, InputBase, Menu, MenuItem, ListItemIcon } from '@mui/material'
 import { PRIMARY_MAIN } from '../../theme/palette'
 import { useTheme } from '@mui/material/styles'
-import { Outlet } from 'react-router'
+import { Outlet, useNavigate } from 'react-router'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccordionChats from './AccordionChats'
 import MenuOptions from './MenuOptions'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
+import LogoutIcon from '@mui/icons-material/Logout'
+import { AuthContext } from '../../context/AuthProvider'
 
 const drawerWidth = 285
 const closedDrawerWidth = 60
@@ -17,6 +19,23 @@ export default function MenuDrawer() {
     const [open, setOpen] = useState(true)
     const [isSearchActive, setIsSearchActive] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
+    const [anchorEl, setAnchorEl] = useState(null)
+    const openMenu = Boolean(anchorEl)
+    const { logout } = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+
+    const handleLogout = () => {
+        logout()
+        navigate('/login')
+    }
 
     const handleDrawerOpenAndClose = () => {
         setOpen(!open)
@@ -55,7 +74,23 @@ export default function MenuDrawer() {
                     </Typography>
 
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar sx={{ bgcolor: PRIMARY_MAIN, width: 32, height: 32 }}></Avatar>
+                        <IconButton
+                            onClick={handleClick}>
+                            <Avatar sx={{ bgcolor: PRIMARY_MAIN, width: 32, height: 32 }}></Avatar>
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={openMenu}
+                            onClose={handleClose}
+                            onClick={handleClose}
+                        >
+                            <MenuItem onClick={handleLogout}>
+                                <ListItemIcon>
+                                    <LogoutIcon fontSize='small' />
+                                </ListItemIcon>
+                                Sair
+                            </MenuItem>
+                        </Menu>
                     </Box>
                 </Toolbar>
             </AppBar>

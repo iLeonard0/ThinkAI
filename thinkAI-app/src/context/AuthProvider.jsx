@@ -1,12 +1,10 @@
 import React, { useState, useEffect, createContext } from "react"
 import { api } from "../services/api"
-import { useSnackbar } from "notistack"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
-  const { enqueueSnackbar } = useSnackbar()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
